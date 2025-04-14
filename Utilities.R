@@ -11,11 +11,12 @@ getTop3Songs <- function(filepath) {
 
 ## Function to clean songs title and artist into usable text
 songs_clean <- songs %>%
+  rename(Artist = Artist.s.) %>%  
   mutate(
-    artist_clean = str_to_lower(artist),
-    artist_clean = str_replace_all(artist_clean, "[^a-z0-9]", ""),  # Remove punctuation, spaces
-    song_clean = str_to_lower(title),
-    song_clean = str_replace_all(song_clean, "[^a-z0-9]", "")       
+    artist_clean = str_to_lower(Artist),
+    artist_clean = str_replace_all(artist_clean, "[^a-z0-9]", ""),  
+    title_clean = str_to_lower(Title),
+    title_clean = str_replace_all(title_clean, "[^a-z0-9]", "")
   )
 
 artist_vector <- songs_clean$artist_clean
