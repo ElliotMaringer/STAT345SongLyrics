@@ -1,0 +1,45 @@
+---
+title: "Stat345DocumentFinal"
+author: "Elliot Maringer"
+date: "2025-05-02"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidytext)
+library(dplyr)
+```
+
+## Intro 
+
+In today’s music industry, repetitiveness is often cited as a catchy or commercially successful songs. However, defining what makes a song "repetitive" is far from straightforward. Repetitiveness can refer to repeated words, phrases, melodies, or even structural elements such as choruses. In this project, we aim to explore lyrical repetitiveness across Billboard’s year-end top songs list over time, using a combination of methods and lyrical analysis. Our goal is to identify trends in repetitiveness, investigate whether songs have become more or less repetitive over the decades, and consider how different metrics of repetitiveness might provide further insight.
+
+To do this, we built a dataset of Billboard’s top songs for each year since 1946. For each song, we scraped the lyrics from songlyrics.com and extracted metadata from the Spotify Web API. While some data—such as genre—were incomplete, our dataset still allows for a robust analysis of lyrical repetitiveness over time using multiple approaches.
+
+## Methods 
+
+To measure lyrical repetitiveness in popular songs, we developed four different analytical techniques. Each method captures a unique dimension of repetition, from word variety to structural reuse, and together they provide a more complete picture of how repetition functions in music over time.
+
+### **Unique-to-Total Word Ratio**
+This method helps highlight the variety of words in a song. Values from this method will be in the range [0,1] where a value closer to 0 indicates the song repeated a word many times and a value close to 1 indicates the song used very few repeated words. This method offers a high-level view of lyrical variety and is useful in comparing how word usage and patters may have evolved over time
+
+### **Title Word Repetition**
+This method helps highlight a very common trend in songs of repeating the title. The title of a song very often in the focal point or the "message" of a songs so it is often repeated for a greater effect. This approach shows a stylistic trend that is especially popular in pop and radio songs where memorability and recognizably are critical for their commercial success. 
+
+### **Line or Verse Repetition**
+As with the method above this also highlights a very common trend in pop or radio songs. Many songs have a hook or chorus that is repeated throughout the songs to again increase the lyrical affect. The chorus is usually separated by verses which help reduce the songs repetitiveness. By measuring how often linear were repeated we can assess how much or a song's structure is built around repitition. Songs with highly repetitive choruses or hooks will score high with this metric
+
+### **Most Repeated Non-Stop Words**
+This technique identifies the most frequently used meaningful word in a song’s lyrics. To focus on relevant content, we first remove English stop words like “the,” “and,” or “but” that contribute little to no meaning. This metric reflects how strongly a particular concept, theme, or emotion is emphasized through repetition. For example, a love song might frequently repeat a word like “baby” or “heart,” revealing its emotional focus. By excluding filler words, we better isolate the song’s lyrical intent.
+
+
+## Analysis 
+
+### Unique-to-Total 
+
+
+## Conclusion
+
+
