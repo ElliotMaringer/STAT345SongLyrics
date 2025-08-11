@@ -1,8 +1,8 @@
 ##install.packages("spotifyr")
 library(spotifyr)
 
-Sys.setenv(SPOTIFY_CLIENT_ID = '2591b396c76b4e1a9c3de07d2d7e07c0')
-Sys.setenv(SPOTIFY_CLIENT_SECRET = 'ff1dc383d7054a6cbd1b26fc8ad691f7')
+Sys.setenv(SPOTIFY_CLIENT_ID = 'xxxxxxxxxxxxxxx')
+Sys.setenv(SPOTIFY_CLIENT_SECRET = 'xxxxxxxxxxxx')
 
 access_token <- get_spotify_access_token()
 
