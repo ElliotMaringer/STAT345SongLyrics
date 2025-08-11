@@ -1,0 +1,60 @@
+---
+title: "Repetitive Lines in Lyrics"
+author: "Lucas Strauss"
+date: "2025-05-07"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(stringr)
+library(tidyverse)
+songs <- read.csv("combined_all_songs_lyrics(in).csv")
+
+#Function to split the lyrics into lines and determine which line is most common. Returns a vector of the most common line, the number of occurences, and the total number of lines in the lyrics.
+most_common_line <- function(lyrics) {
+  if(is.na(lyrics) || lyrics=="") return(NA_character_) #Ensures there are lyrics for the song in the csv file
+  phrases <- unlist(strsplit(lyrics, "\n")) #Splits the lyrics up into individual lines
+  if(length(phrases) == 0) return(NA_character_) #Ensures the lyrics are split up by line
+  occurrences <- table(phrases) #Counts the number of times each line appears
+  if (length(occurrences) == 0) return(NA_character_) #Ensures the table function runs correctly on the lyrics
+  sorted <- sort(occurrences, decreasing = TRUE) #Sorts the table of occurences from most to least common
+  c(line=names(sorted)[1], line_num=sorted[1], total_lines=length(phrases)) #Returns a vector of the most common line, the number of occurences, and the total number of lines in the lyrics
+}
+```
+
+```{r}
+new_songs <- songs %>%
+  rowwise() %>%
+  mutate(common_line=most_common_line(lyrics)[1], #Creates a column for the most common line in each song
+         common_line_count=as.numeric(most_common_line(lyrics)[2]), #Creates a column for the number of times the line appears in the song
+         common_line_frequency=(as.numeric(most_common_line(lyrics)[2]))/duration_sec*60) %>% #Creates a column for the number of times a line appears divided by the total duration of the song
+  filter(common_line_frequency!=1) #Filters out incomplete lyrics
+```
+
+```{r}
+#Creates a plot of the number of times the most common line appears in a song versus the year the song was released
+p1 <- ggplot(new_songs, aes(x=Year, y=common_line_count)) +
+  geom_point(alpha=.1) +
+  geom_smooth(color="red", se=FALSE) +
+  theme_minimal() +
+  labs(title="Repetitive Lines Over Time", y="Repetitive Line Count")
+
+ggsave("repetitive_lines_count.png", plot = p1, width = 8, height = 5, dpi = 300, bg = "white")
+```
+This graph displays the number of times the most common line in a song is repeated over the year it was on the top 100 songs list. Over time, there appears to be a positive correlation between the repetitive lines and the year it was released. Therefore, there is evidence to suggest that lines are becoming repeated more and more as time goes on. However, between 2000 and 2020, there is very little increase in repetitive lines, suggesting that the repetitiveness of songs is stagnating.
+
+```{r}
+#Creates a plot of the frequency of the most common line versus the year the song was released
+p2 <- ggplot(new_songs, aes(x=Year, y=common_line_frequency)) +
+  geom_point(alpha=.1) +
+  geom_smooth(color="red", se=FALSE) +
+  theme_minimal() +
+  labs(title="Frequency of Repetitive Lines Over Time", y="Repetitive Line Frequency (lines/min)")
+
+ggsave("repetitive_lines_frequency.png", plot = p2, width = 8, height = 5, dpi = 300, bg = "white")
+```
+This graph displays the frequency of repetitive lines in repetitive lines per minute. This graph takes into account the duration of the song when analyzing repetitiveness. This graph suggests that repetitiveness took a sharp increase between 1945 and 1960, a slight decrease between 1960 and 1980, and a slow increase between 1980 and 2020. Overall, there is a positive correlation between repetitive line frequency and time. This would suggest that songs are becoming slowly more repetitive. This graph provides a slightly better estimate of repetitiveness than the last one because it takes into account the duration of each song. Therefore, longer songs are not considered more repetitive than shorter songs.

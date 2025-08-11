@@ -1,0 +1,43 @@
+---
+title: "BillboardData"
+author: "Elliot Maringer"
+date: "2025-04-20"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(dplyr)
+library(spotifyr)
+library(readxl)
+
+Sys.setenv(SPOTIFY_CLIENT_ID = '2591b396c76b4e1a9c3de07d2d7e07c0')
+Sys.setenv(SPOTIFY_CLIENT_SECRET = 'ff1dc383d7054a6cbd1b26fc8ad691f7')
+access_token <- get_spotify_access_token()
+```
+
+
+```{r}
+## Get top 3 songs from csv file
+top3songs <- get_Top3_Songs("Top100Songs.csv")
+
+## Add duration and genre attributes from spotify web api
+songsWithDuration <- add_song_duration(top3songs)
+
+## Create csv file for further analysis
+write_csv(songsWithDuration, "Top3SongsData.csv")
+```
+
+```{r}
+
+
+songs <- read_csv("Top100Songs.csv")
+
+
+allSongsWithDuration <- add_song_duration(songs)
+
+write_csv(allSongsWithDuration, "AllSongsData.csv")
+```
+

@@ -2,7 +2,7 @@
 library(tidyverse)
 
 ## Function to get songs that reached top 3
-getTop3Songs <- function(filepath) {
+get_Top3_Songs <- function(filepath) {
   library(dplyr)
   
   topsongs <- read.csv(filepath)
@@ -32,4 +32,50 @@ clean_song_data <- function(dataset) {
   
   return(cleaned)
 }
+
+get_duration <- function(title, artist) {
+  query <- paste(title, artist)
+  result <- search_spotify(query, type = "track", limit = 1)
+  if (nrow(result) > 0) {
+    return(result$duration_ms[1] / 1000)
+  } else {
+    message(paste("No match found (duration):", query))
+    return(NA)
+  }
+}
+
+get_genres <- function(title, artist) {
+  query <- paste(title, artist)
+  result <- search_spotify(query, type = "track", limit = 1)
+  
+  if (nrow(result) > 0 && length(result$artists[[1]]$id) > 0) {
+    artist_id <- result$artists[[1]]$id[1]
+    artist_info <- get_artist(artist_id)
+    
+    # Safely check if genres exist
+    if (!is.null(artist_info$genres) && length(artist_info$genres) > 0 && length(artist_info$genres[[1]]) > 0) {
+      return(paste(artist_info$genres[[1]], collapse = ", "))
+    } else {
+      message(paste("No genre data for:", title, "-", artist))
+      return(NA)
+    }
+  } else {
+    message(paste("No match found (genre):", title, "-", artist))
+    return(NA)
+  }
+}
+
+add_song_duration <- function(df) {
+  df <- df %>%
+    rename(Artist = 'Artist(s)') %>%
+    rowwise() %>%
+    mutate(
+      duration_sec = get_duration(Title, Artist),
+    ) %>%
+    ungroup()
+  
+  return(df)
+}
+
+
 
